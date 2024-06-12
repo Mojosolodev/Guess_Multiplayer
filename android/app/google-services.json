@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "363031086252",
+    "project_id": "guessmultiplayer",
+    "storage_bucket": "guessmultiplayer.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:363031086252:android:081f9d435a657776e64b09",
+        "android_client_info": {
+          "package_name": "com.guess"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-G858YBLvIsJONySAcRgW72tnTFOgiJ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
