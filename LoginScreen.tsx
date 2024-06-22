@@ -20,10 +20,13 @@ import auth from "@react-native-firebase/auth";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
+
 function LoginScreen({ navigation }: { navigation: any }) {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState(""); 
+
+    
 
     useEffect(()=>{
         GoogleSignin.configure({
@@ -36,7 +39,7 @@ function LoginScreen({ navigation }: { navigation: any }) {
         auth().signInWithEmailAndPassword(email,password)
         .then((res)=>{
             console.log(res)
-            Alert.alert("Login Succesful")
+            Alert.alert("Login Successful")
             navigation.navigate("HomeScreen")
         })
         .catch(err=>{

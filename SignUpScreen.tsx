@@ -18,12 +18,20 @@ import {
 } from 'react-native';
 import auth from "@react-native-firebase/auth";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from './HomeScreen';
+import firestore, { DocumentData } from '@react-native-firebase/firestore';
+
 
 function SignUpScreenTest({ navigation }: { navigation: any }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  const addPlayer = () => {
+    firestore().collection("players").add({
+      email: email,
+      position: 0,
+    })
+  }
 
   const handleSignUp = () => {
     // Add your sign-up logic here
@@ -35,6 +43,7 @@ function SignUpScreenTest({ navigation }: { navigation: any }) {
   const signUpTestFn = () => {
     auth().createUserWithEmailAndPassword(email, password).then(() => {
       Alert.alert("User Created,You can now Login");
+      addPlayer();
       navigation.navigate("Login");
     })
     .catch((err) => {

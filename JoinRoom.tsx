@@ -8,14 +8,30 @@ import {
   FlatList,
 } from 'react-native';
 import auth from "@react-native-firebase/auth"
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import firestore, { DocumentData } from '@react-native-firebase/firestore';
 
 const JoinRoom = () => {
 
+   
+
     const [loading, setLoading] = useState(true); // Set loading to true on component mount
      const [parties, setParties] = useState([]); // Initial empty array of users
+
+     const {params} =useRoute()
+     console.log('--------------');
+     console.log(parties.nom);
+     console.log('--------------');
+
+     const updatePartie=()=>{
+        firestore()
+        .collection("partie")
+        .doc("key")
+        .update({
+            readyPlayers:15
+        })
+     }
 
     useEffect(() => {
         const subscriber = firestore()
@@ -67,10 +83,11 @@ const JoinRoom = () => {
       <FlatList
       data={parties}
       renderItem={({ item }) => (
-        <TouchableOpacity style={[styles.infoButton, styles.darkOrangeButton]}>
+        <TouchableOpacity style={[styles.infoButton, styles.darkOrangeButton]} onPress={updatePartie}>
           <View>
             <Text style={[styles.largeText, styles.darkOrangeText]}>Nom de la partie : <Text style={[styles.bold, styles.darkOrangeText]}>{item.nom}</Text></Text>
             <Text style={[styles.largeText, styles.darkOrangeText]}>Nombre maximum de joueurs : <Text style={[styles.bold, styles.darkOrangeText]}>{item.nbMax_players}</Text></Text>
+            <Text style={[styles.largeText, styles.darkOrangeText]}>readyPlayers: <Text style={[styles.bold, styles.darkOrangeText]}>{item.readyPlayers}</Text></Text>
           </View>
         </TouchableOpacity>
       )}
@@ -111,9 +128,9 @@ const styles = StyleSheet.create({
   },
   infoButton: {
     backgroundColor: '#007bff',
-    padding: 12,
-    borderRadius: 8,
-    marginVertical: 16,
+    padding: 10,
+    borderRadius: 17,
+    marginVertical: 7,
     alignItems: 'center',
   },
   darkOrangeButton: {

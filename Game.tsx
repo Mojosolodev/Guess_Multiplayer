@@ -13,27 +13,21 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import firestore, { DocumentData } from '@react-native-firebase/firestore';
 
-function CreateRoom({ navigation }: { navigation: any }) {
+function Game({ navigation }: { navigation: any }) {
   const [partyName, setPartyName] = useState('');
-  const [maxPlayers, setMaxPlayers] = useState('');
+  const [maxPlayers, setMaxPlayers] = useState(1);
   const [readyPlayers, setReadyPlayers] = useState(1);
-  const [minInterval, setminInterval] = useState(1);
-  const [maxInterval, setmaxnInterval] = useState(100);
 
   const addPartie = () => {
     firestore().collection("partie").add({
       nom: partyName,
       nbMax_players: maxPlayers,
-      readyPlayers:readyPlayers,
-      minInterval:minInterval,
-      maxInterval:maxInterval
+      readyPlayers:readyPlayers
     })
     Alert.alert("Party Created");
     setPartyName("")
     setMaxPlayers(1)
     setReadyPlayers(1)
-    setminInterval(1)
-    setmaxnInterval(100)
     navigation.navigate("Lobby")
   }
 
@@ -47,42 +41,17 @@ function CreateRoom({ navigation }: { navigation: any }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Create/Host A Party</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Party Name"
-        value={partyName}
-        onChangeText={setPartyName}
-      />
-      <Text>Nombre Max de joueurs</Text>
+      <Text style={styles.title}>Try A number</Text>
       <NumericInput
         style={styles.input}
-        placeholder="Max Players"
+        placeholder="Try number"
         value={maxPlayers}
         onChangeText={handleMaxPlayersChange}
         keyboardType="number-pad"
         minValue={1}
       />
-      <Text>Interval Minimum</Text>
-      <NumericInput
-        style={styles.input}
-        placeholder="Minimum Interval"
-        value={minInterval}
-        onChangeText={handleMaxPlayersChange}
-        keyboardType="number-pad"
-        minValue={1}
-      />
-      <Text>Interval Maximum</Text>
-      <NumericInput
-        style={styles.input}
-        placeholder="Maximum Interval"
-        value={maxInterval}
-        onChangeText={handleMaxPlayersChange}
-        keyboardType="number-pad"
-        minValue={1}
-      />
-      <TouchableOpacity style={styles.button} onPress={addPartie}>
-        <Text style={styles.buttonText}>Create party</Text>
+      <TouchableOpacity style={styles.button} >
+        <Text style={styles.buttonText}>guess</Text>
       </TouchableOpacity>
     </View>
   );
@@ -162,4 +131,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateRoom;
+export default Game;
