@@ -8,22 +8,22 @@ import {
 import auth from "@react-native-firebase/auth"
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import firestore from '@react-native-firebase/firestore';
 
 
-function HomeScreen({ navigation }: { navigation: any }) {
+function JoinRoom() {
 
-  const goLobby=()=>{
-    navigation.navigate("JoinRoom")
+  //recuperation de donnees du firestore
+  const getData = async() =>{
+    const partiesCollection = await firestore().collection('partie').get();
+    console.log(partiesCollection)
   }
 
   return (
     <View style={styles.container}>
-    <Text style={styles.title}>Guess The Number</Text>
+    <Text style={styles.title}>Liste des Parties</Text>
     <TouchableOpacity style={styles.button}>
-      <Text style={styles.buttonText}>Create Room</Text>
-    </TouchableOpacity>
-    <TouchableOpacity style={styles.button} onPress={goLobby}>
-      <Text style={styles.buttonText}>Join Room</Text>
+      <Text style={styles.buttonText}>Retour</Text>
     </TouchableOpacity>
     </View>
     
@@ -56,4 +56,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default JoinRoom;

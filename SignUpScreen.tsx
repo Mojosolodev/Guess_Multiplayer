@@ -13,6 +13,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  TouchableWithoutFeedback,
+  Image,
 } from 'react-native';
 import auth from "@react-native-firebase/auth";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -40,6 +42,10 @@ function SignUpScreenTest({ navigation }: { navigation: any }) {
       Alert.alert(err.message);
     })
   }
+
+  const handleImagePress = () => {
+    Alert.alert('Google Sign-In ');
+}
 
   return (
     <View style={styles.container}>
@@ -69,6 +75,12 @@ function SignUpScreenTest({ navigation }: { navigation: any }) {
       <TouchableOpacity style={styles.signUpButton} onPress={signUpTestFn}>
         <Text style={styles.signUpButtonText}>Sign Up</Text>
       </TouchableOpacity>
+      <TouchableWithoutFeedback onPress={handleImagePress}>
+        <Image
+          source={require('./google.png')}
+          style={styles.image}
+        />
+      </TouchableWithoutFeedback>
     </View>
   );
 }
@@ -77,7 +89,7 @@ const Stack = createNativeStackNavigator();
 
 function SignUpScreen(): React.JSX.Element {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{headerShown:false}}>
         <Stack.Screen name="SignUpScreen" component={SignUpScreenTest} />
     </Stack.Navigator>
   );
@@ -115,6 +127,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  image: {
+    width: 100,
+    height: 100,
+    marginTop: 24,
   },
 });
 

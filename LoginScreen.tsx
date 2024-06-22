@@ -5,23 +5,31 @@
  * @format
  */
 
-import React, { useState } from 'react'; 
+import React, { useEffect, useState } from 'react'; 
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   StyleSheet,
   Alert,
+  Image,
 } from 'react-native';
 import auth from "@react-native-firebase/auth";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from './HomeScreen';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
-const LoginScreen = ({navigation}) =>{
+function LoginScreen({ navigation }: { navigation: any }) {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState(""); 
+
+    useEffect(()=>{
+        GoogleSignin.configure({
+            webClientId: '',
+          });          
+    },[])
 
     const loginWithEmailAndPassword=()=>{
         if(email && password)
@@ -38,6 +46,10 @@ const LoginScreen = ({navigation}) =>{
         else{
             Alert.alert("enter Email and Password")
         }
+    }
+
+    const handleImagePress = () => {
+        Alert.alert('Google Sign-In ');
     }
   
   return (
@@ -61,6 +73,12 @@ const LoginScreen = ({navigation}) =>{
       <TouchableOpacity style={styles.signUpButton} onPress={loginWithEmailAndPassword}>
         <Text style={styles.signUpButtonText}>Login</Text>
       </TouchableOpacity>
+      <TouchableWithoutFeedback onPress={handleImagePress}>
+        <Image
+          source={require('./google.png')}
+          style={styles.image}
+        />
+      </TouchableWithoutFeedback>
     </View>
   );
 }
@@ -98,6 +116,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  image: {
+    width: 100,
+    height: 100,
+    marginTop: 24,
   },
 });
 
