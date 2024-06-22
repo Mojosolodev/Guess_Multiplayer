@@ -12,17 +12,20 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 function HomeScreen({ navigation }: { navigation: any }) {
 
-  const goLobby=()=>{
+  const goJoin=()=>{
     navigation.navigate("JoinRoom")
+  }
+  const goCreateRoom=()=>{
+    navigation.navigate("CreateRoom")
   }
 
   return (
     <View style={styles.container}>
     <Text style={styles.title}>Guess The Number</Text>
-    <TouchableOpacity style={styles.button}>
+    <TouchableOpacity style={styles.button} onPress={goCreateRoom}>
       <Text style={styles.buttonText}>Create Room</Text>
     </TouchableOpacity>
-    <TouchableOpacity style={styles.button} onPress={goLobby}>
+    <TouchableOpacity style={styles.button} onPress={goJoin}>
       <Text style={styles.buttonText}>Join Room</Text>
     </TouchableOpacity>
     </View>

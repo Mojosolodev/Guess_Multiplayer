@@ -1,53 +1,130 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   StyleSheet,
+  ActivityIndicator,
+  FlatList,
 } from 'react-native';
 import auth from "@react-native-firebase/auth"
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import firestore from '@react-native-firebase/firestore';
+import firestore, { DocumentData } from '@react-native-firebase/firestore';
 
+const JoinRoom = () => {
 
-function JoinRoom() {
+    const [loading, setLoading] = useState(true); // Set loading to true on component mount
+     const [parties, setParties] = useState([]); // Initial empty array of users
+
+    useEffect(() => {
+        const subscriber = firestore()
+          .collection('partie')
+          .onSnapshot(querySnapshot => {
+            const parties = [];
+      
+            querySnapshot.forEach(documentSnapshot => {
+                parties.push({
+                ...documentSnapshot.data(),
+                key: documentSnapshot.id,
+              });
+            });
+      
+            setParties(parties);
+            setLoading(false);
+          });
+      
+        // Unsubscribe from events when no longer in use
+        return () => subscriber();
+      }, []);
+      
+
+  const [partie, setPartie] = useState<DocumentData | undefined>(undefined);
 
   //recuperation de donnees du firestore
-  const getData = async() =>{
+  const getData = async() => {
     const partiesCollection = await firestore().collection('partie').get();
-    console.log(partiesCollection)
+    console.log(partiesCollection.docs[0].data());
+    setPartie(partiesCollection.docs[0].data());
+  }
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+
+  console.log(parties)
+  if (loading) {
+    return <ActivityIndicator />;
   }
 
   return (
     <View style={styles.container}>
-    <Text style={styles.title}>Liste des Parties</Text>
-    <TouchableOpacity style={styles.button}>
-      <Text style={styles.buttonText}>Retour</Text>
-    </TouchableOpacity>
+      <View style={styles.header}>
+        <Text style={styles.title}>Liste des Parties</Text>
+      </View>
+
+      <FlatList
+      data={parties}
+      renderItem={({ item }) => (
+        <TouchableOpacity style={[styles.infoButton, styles.darkOrangeButton]}>
+          <View>
+            <Text style={[styles.largeText, styles.darkOrangeText]}>Nom de la partie : <Text style={[styles.bold, styles.darkOrangeText]}>{item.nom}</Text></Text>
+            <Text style={[styles.largeText, styles.darkOrangeText]}>Nombre maximum de joueurs : <Text style={[styles.bold, styles.darkOrangeText]}>{item.nbMax_players}</Text></Text>
+          </View>
+        </TouchableOpacity>
+      )}
+    />
+
     </View>
-    
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#f5f5f5',
+  },
+  header: {
+    backgroundColor: '#007bff',
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 24,
+    color: '#fff',
+  },
+  largeText: {
+    fontSize: 18,
+    color: '#fff',
+  },
+  bold: {
+    fontWeight: 'bold',
+  },
+  darkOrangeText: {
+    backgroundColor: '#FF8C00',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+  },
+  infoButton: {
+    backgroundColor: '#007bff',
+    padding: 12,
+    borderRadius: 8,
+    marginVertical: 16,
+    alignItems: 'center',
+  },
+  darkOrangeButton: {
+    backgroundColor: '#FF8C00',
   },
   button: {
     backgroundColor: '#007bff',
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 8,
-    marginVertical: 12,
+    marginVertical: 16,
   },
   buttonText: {
     color: '#fff',
