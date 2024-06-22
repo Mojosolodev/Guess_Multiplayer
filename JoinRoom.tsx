@@ -12,7 +12,7 @@ import { NavigationContainer, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import firestore, { DocumentData } from '@react-native-firebase/firestore';
 
-const JoinRoom = () => {
+function JoinRoom({ navigation }: { navigation: any }) {
 
    
 
@@ -24,13 +24,8 @@ const JoinRoom = () => {
      console.log(parties.nom);
      console.log('--------------');
 
-     const updatePartie=()=>{
-        firestore()
-        .collection("partie")
-        .doc("key")
-        .update({
-            readyPlayers:15
-        })
+     const goLobby=()=>{
+      navigation.navigate("Lobby",)
      }
 
     useEffect(() => {
@@ -83,11 +78,12 @@ const JoinRoom = () => {
       <FlatList
       data={parties}
       renderItem={({ item }) => (
-        <TouchableOpacity style={[styles.infoButton, styles.darkOrangeButton]} onPress={updatePartie}>
+        <TouchableOpacity style={[styles.infoButton, styles.darkOrangeButton]} onPress={goLobby}>
           <View>
             <Text style={[styles.largeText, styles.darkOrangeText]}>Nom de la partie : <Text style={[styles.bold, styles.darkOrangeText]}>{item.nom}</Text></Text>
             <Text style={[styles.largeText, styles.darkOrangeText]}>Nombre maximum de joueurs : <Text style={[styles.bold, styles.darkOrangeText]}>{item.nbMax_players}</Text></Text>
             <Text style={[styles.largeText, styles.darkOrangeText]}>readyPlayers: <Text style={[styles.bold, styles.darkOrangeText]}>{item.readyPlayers}</Text></Text>
+            <Text style={[styles.largeText, styles.darkOrangeText]}>min: <Text style={[styles.bold, styles.darkOrangeText]}>{item.minInterval}</Text>   -----------  <Text style={[styles.largeText, styles.darkOrangeText]}>max: <Text style={[styles.bold, styles.darkOrangeText]}>{item.maxInterval}</Text></Text></Text>
           </View>
         </TouchableOpacity>
       )}

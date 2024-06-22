@@ -14,43 +14,69 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import firestore, { DocumentData } from '@react-native-firebase/firestore';
 
 function Game({ navigation }: { navigation: any }) {
-  const [partyName, setPartyName] = useState('');
-  const [maxPlayers, setMaxPlayers] = useState(1);
-  const [readyPlayers, setReadyPlayers] = useState(1);
+  const [position, setPosition] = useState(1);
+  const [guess, setGuess] = useState(1);
+  const [isPositionDisabled, setIsPositionDisabled] = useState(false);
+  const [isOkButtonDisabled, setIsOkButtonDisabled] = useState(false);
 
-  const addPartie = () => {
-    firestore().collection("partie").add({
-      nom: partyName,
-      nbMax_players: maxPlayers,
-      readyPlayers:readyPlayers
-    })
-    Alert.alert("Party Created");
-    setPartyName("")
-    setMaxPlayers(1)
-    setReadyPlayers(1)
-    navigation.navigate("Lobby")
-  }
-
-  const handleMaxPlayersChange = (text: string) => {
+  const handlePosition = (text: string) => {
     let value = parseInt(text);
     if (isNaN(value) || value < 1) {
       value = 1; // Set a minimum value of 1 if the input is not a valid number
     }
-    setMaxPlayers(value);
+    setPosition(value);
+  };
+
+  const handleGuess = (text: string) => {
+    let value = parseInt(text);
+    if (isNaN(value) || value < 1) {
+      value = 1; // Set a minimum value of 1 if the input is not a valid number
+    }
+    setGuess(value);
+  };
+
+  const handleOkPress = async () => {
+    try {
+      await firestore()
+        .collection('players')
+        .doc('BqaK70Ka0PRS04JbqKgM')
+        .update({ position: position });
+      setIsPositionDisabled(true);
+      setIsOkButtonDisabled(true);
+    } catch (error) {
+      console.error('Error updating position:', error);
+    }
   };
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Choose Your Number</Text>
+      <NumericInput
+        style={styles.input}
+        placeholder="Choose Your Number"
+        value={position}
+        onChangeText={handlePosition}
+        keyboardType="number-pad"
+        minValue={1}
+        editable={!isPositionDisabled}
+      />
+      <TouchableOpacity
+        style={[styles.button, isOkButtonDisabled && styles.disabledButton]}
+        onPress={handleOkPress}
+        disabled={isOkButtonDisabled}
+      >
+        <Text style={[styles.buttonText, isOkButtonDisabled && styles.disabledButtonText]}>Ok</Text>
+      </TouchableOpacity>
       <Text style={styles.title}>Try A number</Text>
       <NumericInput
         style={styles.input}
         placeholder="Try number"
-        value={maxPlayers}
-        onChangeText={handleMaxPlayersChange}
+        value={guess}
+        onChangeText={handleGuess}
         keyboardType="number-pad"
         minValue={1}
       />
-      <TouchableOpacity style={styles.button} >
+      <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>guess</Text>
       </TouchableOpacity>
     </View>
@@ -64,6 +90,7 @@ const NumericInput = ({
   placeholder,
   keyboardType,
   minValue,
+  editable = true,
 }: {
   value: number;
   onChangeText: (text: string) => void;
@@ -71,6 +98,7 @@ const NumericInput = ({
   placeholder?: string;
   keyboardType?: KeyboardTypeOptions;
   minValue?: number;
+  editable?: boolean;
 }) => {
   const handleChange = (text: string) => {
     let value = parseInt(text);
@@ -90,6 +118,7 @@ const NumericInput = ({
       maxLength={10}
       dataDetectorTypes="none"
       textContentType="none"
+      editable={editable}
     />
   );
 };
@@ -124,10 +153,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
   },
+  disabledButton: {
+    backgroundColor: '#ccc',
+  },
   buttonText: {
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  disabledButtonText: {
+    color: '#666',
   },
 });
 

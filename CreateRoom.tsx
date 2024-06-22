@@ -18,7 +18,7 @@ function CreateRoom({ navigation }: { navigation: any }) {
   const [maxPlayers, setMaxPlayers] = useState('');
   const [readyPlayers, setReadyPlayers] = useState(1);
   const [minInterval, setminInterval] = useState(1);
-  const [maxInterval, setmaxnInterval] = useState(100);
+  const [maxInterval, setmaxInterval] = useState(100);
 
   const addPartie = () => {
     firestore().collection("partie").add({
@@ -33,7 +33,7 @@ function CreateRoom({ navigation }: { navigation: any }) {
     setMaxPlayers(1)
     setReadyPlayers(1)
     setminInterval(1)
-    setmaxnInterval(100)
+    setmaxInterval(100)
     navigation.navigate("Lobby")
   }
 
@@ -43,6 +43,20 @@ function CreateRoom({ navigation }: { navigation: any }) {
       value = 1; // Set a minimum value of 1 if the input is not a valid number
     }
     setMaxPlayers(value);
+  };
+  const handleMin= (text: string) => {
+    let value = parseInt(text);
+    if (isNaN(value) || value < 1) {
+      value = 1; // Set a minimum value of 1 if the input is not a valid number
+    }
+    setminInterval(value);
+  };
+  const handleMax = (text: string) => {
+    let value = parseInt(text);
+    if (isNaN(value) || value < 1) {
+      value = 1; // Set a minimum value of 1 if the input is not a valid number
+    }
+    setmaxInterval(value);
   };
 
   return (
@@ -68,7 +82,7 @@ function CreateRoom({ navigation }: { navigation: any }) {
         style={styles.input}
         placeholder="Minimum Interval"
         value={minInterval}
-        onChangeText={handleMaxPlayersChange}
+        onChangeText={handleMin}
         keyboardType="number-pad"
         minValue={1}
       />
@@ -77,7 +91,7 @@ function CreateRoom({ navigation }: { navigation: any }) {
         style={styles.input}
         placeholder="Maximum Interval"
         value={maxInterval}
-        onChangeText={handleMaxPlayersChange}
+        onChangeText={handleMax}
         keyboardType="number-pad"
         minValue={1}
       />
